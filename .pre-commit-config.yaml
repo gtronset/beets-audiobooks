@@ -5,8 +5,6 @@ repos:
     hooks:
       - id: check-yaml
       - id: check-toml
-      - id: fix-encoding-pragma
-        args: [--remove]
       - id: end-of-file-fixer
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
@@ -27,7 +25,7 @@ repos:
         stages: [manual]
 
   - repo: https://github.com/crate-ci/typos
-    rev: v1.12.2
+    rev: v1.13.5
     hooks:
       - id: typos
-        exclude: "(_typos.toml|.gitignore)"
+        exclude: "(_typos.toml|.gitignore|.dockerignore)"
