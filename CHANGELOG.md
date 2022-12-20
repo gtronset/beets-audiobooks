@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2022-12-19
+
 ### Added
 
 - Initial commits and image
@@ -17,4 +19,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release Links -->
 
-[unreleased]: https://github.com/gtronset/beets-audiobooks/compare/main...HEAD
+[unreleased]: https://github.com/gtronset/beets-audiobooks/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/gtronset/beets-audiobooks/releases/tag/v0.1.0

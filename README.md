@@ -1,6 +1,8 @@
 # beets-audiobooks: Organize Your Audiobook Collection With Beets
 
 [![MIT license][license image]][license link]
+[![Build Status][build image]][build link]
+[![GitHub release][github image]][github link]
 
 This bundles up the excellent pllugin [beets-audible] plugin with the very
 excellent [beets] tool in a Docker Container.
@@ -46,6 +48,10 @@ Licensed under the [MIT license][license link].
 
 [license image]: https://img.shields.io/badge/License-MIT-blue.svg
 [license link]: https://github.com/gtronset/beets-audiobooks/blob/main/LICENSE
+[build image]: https://github.com/gtronset/beets-audiobooks/actions/workflows/build-release.yaml/badge.svg
+[build link]: https://github.com/gtronset/beets-audiobooks/actions/workflows/build-release.yaml
+[github image]: https://img.shields.io/github/release/gtronset/beets-audiobooks.svg
+[github link]: https://github.com/gtronset/beets-audiobooks/releases
 [beets-audible]: https://github.com/Neurrone/beets-audible
 [beets]: https://github.com/beetbox/beets
 [beets-audible info]: https://github.com/Neurrone/beets-audible#installation
