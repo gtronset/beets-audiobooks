@@ -38,3 +38,5 @@ Temporary Items
 
 .env
 .vscode
+dev-docker-compose.yaml
+.config
