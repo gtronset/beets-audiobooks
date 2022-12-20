@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Initial commits and image
 - Configure Dependabot for Docker, pip, and GitHub Actions
+- Add audiobook-specific default config
 
 <!-- Release Links -->
 
