@@ -1,0 +1,51 @@
+# add audible to the list of plugins
+# copyartifacts is optional but recommended if you're manually specifying metadata via metadata.yml, see the "Importing non-audible content" section
+plugins: audible copyartifacts edit fromfilename inline scrub
+
+directory: /audiobooks
+
+# Requires "inline" plugin. See https://github.com/Neurrone/beets-audible/discussions/29
+# Seanap mp3tag formatting:
+#   audiobooks/albumartist/series/year - album [series series_part]/year - album [series series_part] - pt##
+item_fields:
+  track_and_title: |
+    import re
+    regex = r'(Chapter )?0*' + str(track) + r'( -|:)? '
+    return u' - %02i - %s' % (track, title) if tracktotal > 1 and re.match(regex, title) is None else None
+
+# Place books in their own folders to be compatible with Booksonic and Audiobookshelf servers
+paths:
+  # For books that belong to a series
+  "albumtype:audiobook series_name::.+ series_position::.+": $albumartist/%ifdef{series_name}/$album%aunique{} ($year) [%ifdef{series_name} %ifdef{series_position}]/$album%aunique{} ($year) [%ifdef{series_name} %ifdef{series_position}]$track_and_title
+  "albumtype:audiobook series_name::.+": $albumartist/%ifdef{series_name}/$album%aunique{} ($year) [%ifdef{series_name}]/$album%aunique{} ($year) [%ifdef{series_name}]$track_and_title
+  # Stand-alone books
+  "albumtype:audiobook": $albumartist/$album%aunique{} ($year)/$album%aunique{} ($year)$track_and_title
+  default: $albumartist/$album%aunique{} ($year)/$track_and_title
+  singleton: Non-Album/$artist - $title ($year)
+  comp: Compilations/$album%aunique{}/$track_and_title
+  albumtype_soundtrack: Soundtracks/$album/$track_and_title
+
+# Disables musicbrainz lookup, as it doesn't help for audiobooks
+# This requires a workaround for beets v1.6.0 (see https://github.com/beetbox/beets/issues/400)
+musicbrainz:
+  host: localhost:5123
+  # enabled: no # This doesn't work in beets v1.6.0.
+
+audible:
+  # `match_chapters`: If the number of files in the book is the same as the number of chapters from Audible,
+  # attempt to match each file to an audible chapter
+  match_chapters: true
+  source_weight: 0.0 # disable the source_weight penalty
+  fetch_art: true # whether to retrieve cover art
+  include_narrator_in_artists: true # include author and narrator in artist tag. Or just author
+  write_description_file: true # output desc.txt
+  write_reader_file: true # output reader.txt
+
+copyartifacts:
+  extensions: .yml # so that metadata.yml is copied
+
+scrub:
+  auto: yes # optional, enabling this is personal preference
+
+ui:
+  color: yes
