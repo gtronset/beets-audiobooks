@@ -67,7 +67,7 @@ jobs:
 
       - name: Test Docker image
         run: |
-          docker run --rm -i ${{ env.TEST_TAG }} beet
+          docker run --rm -i ${{ env.TEST_TAG }} beet version
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3
