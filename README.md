@@ -13,8 +13,8 @@ excellent [beets] tool in a Docker Container.
    ---
    version: "3"
    services:
-     beets:
-       image: beets-audiobooks
+     beets-audiobooks:
+       image: ghcr.io/gtronset/beets-audiobooks
        container_name: beets-audiobooks
        environment:
          # Update as needed
