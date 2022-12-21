@@ -12,8 +12,8 @@ excellent [beets] tool in a Docker Container.
 1. Save the following as the docker-compose file:
 
    ```yaml
-   ---
-   version: "3"
+   version: "3.9"
+
    services:
      beets-audiobooks:
        image: ghcr.io/gtronset/beets-audiobooks
