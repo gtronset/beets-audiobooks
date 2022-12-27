@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0-ba1]
+
 ### Added
 
 - Add Pre-commit Updater (GitHub Action)
@@ -29,5 +31,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- Release Links -->
 
-[unreleased]: https://github.com/gtronset/beets-audiobooks/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/gtronset/beets-audiobooks/compare/v1.6.0-ba1...HEAD
+[1.6.0-ba1]: https://github.com/gtronset/beets-audiobooks/releases/tag/v1.6.0-ba1
 [0.1.0]: https://github.com/gtronset/beets-audiobooks/releases/tag/v0.1.0
