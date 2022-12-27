@@ -12,6 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - Add Pre-commit Updater (GitHub Action)
+- Add [Filetote beets plugin](https://github.com/gtronset/beets-filetote)
+
+### Changed
+
+- Update pre-commit hooks
+- Adopt clearer versioning scheme (beets version + revision number, ex: `v1.6.0-ba1`)
 
 ## [0.1.0] - 2022-12-19
 
