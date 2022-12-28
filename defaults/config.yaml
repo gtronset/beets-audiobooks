@@ -1,7 +1,7 @@
 # add audible to the list of plugins
-# copyartifacts is optional but recommended if you're manually specifying
-# metadata via metadata.yml, see the "Importing non-audible content" section
-plugins: audible copyartifacts edit filetote fromfilename inline scrub web
+# filetote is optional but recommended if you're manually specifying
+# metadata via `metadata.yml`, see the "Importing non-audible content" section
+plugins: audible edit filetote fromfilename inline scrub web
 
 directory: /audiobooks
 
@@ -42,7 +42,7 @@ audible:
   write_description_file: true # output desc.txt
   write_reader_file: true # output reader.txt
 
-copyartifacts:
+filetote:
   extensions: .yml # so that metadata.yml is copied
 
 scrub:

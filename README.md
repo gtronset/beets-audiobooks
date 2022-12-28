@@ -4,8 +4,9 @@
 [![Build Status][build image]][build link]
 [![GitHub release][github image]][github link]
 
-This bundles up the excellent pllugin [beets-audible] plugin with the very
-excellent [beets] tool in a Docker Container.
+This bundles up the excellent plugin [beets-audible] plugin with the very
+excellent [beets] tool in a Docker Container. Also comes with [beets-filetote]
+plugin preinstalled.
 
 ## Installation
 
@@ -54,5 +55,6 @@ Licensed under the [MIT license][license link].
 [github link]: https://github.com/gtronset/beets-audiobooks/releases
 [beets-audible]: https://github.com/Neurrone/beets-audible
 [beets]: https://github.com/beetbox/beets
+[beets-filetote]: https://github.com/gtronset/beets-filetote
 [beets-audible info]: https://github.com/Neurrone/beets-audible#installation
 [beets-audible repo]: https://github.com/Neurrone/beets-audible#usage
