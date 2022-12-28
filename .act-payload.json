@@ -1,0 +1,9 @@
+{
+    "//comment": "Event payload for local GitHub Action testing. See: https://github.com/nektos/act",
+    "repository": {
+        "full_name": "gtronset/beets-audiobooks"
+    },
+    "release": {
+        "tag_name": "v9.99.999-ba9"
+    }
+}
