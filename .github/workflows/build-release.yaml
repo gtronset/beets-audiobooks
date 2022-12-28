@@ -31,18 +31,18 @@ jobs:
       - name: Docker Meta
         id: meta
         uses: docker/metadata-action@v4
-        env:
-          SEMVER: type=semver,value=${{ github.event.release.tag_name }}
         with:
           images: |
             ghcr.io/${{ github.event.repository.full_name }}
           tags: |
-            ${{ env.SEMVER }},pattern={{version}}
-            ${{ env.SEMVER }},pattern={{major}}.{{minor}}
-            ${{ env.SEMVER }},pattern={{major}}
+              type=match,value=${{ github.event.release.tag_name }},pattern=v(.*),group=1
+              type=match,value=${{ github.event.release.tag_name }},pattern=v(\d+.\d+.\d+),group=1
+              type=match,value=${{ github.event.release.tag_name }},pattern=v(\d+.\d+),group=1
+              type=match,value=${{ github.event.release.tag_name }},pattern=v(\d+),group=1
 
       - name: Tags
         run: |
+              echo "Tags:"
               echo "${{ steps.meta.outputs.tags }}"
 
       #- name: Login to DockerHub
