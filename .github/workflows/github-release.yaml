@@ -12,10 +12,7 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
-      #- name: "Determine tag"
-      #  run: "echo \"RELEASE_TAG=${GITHUB_REF#refs/tags/}\" >> $GITHUB_ENV"
       - uses: actions/checkout@v3
-
 
       - name: Get repo variables
         id: get_repo_vars
@@ -23,13 +20,20 @@ jobs:
         with:
           cmd: yq -o "json" '.' ./repo-vars.yaml
 
-      - name: "Create release"
+      - name: "Add repo variables to ENV"
+        run: |
+          echo "PROJECT_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).project_version }}" >> $GITHUB_ENV
+          echo "LSIO_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).lsio_version }}" >> $GITHUB_ENV
+          echo "BA_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).ba_version }}" >> $GITHUB_ENV
+
+      - name: "Prep for Release"
         uses: "actions/github-script@v6.3.3"
-        env:
-          PROJECT_VERSION: ${{ fromJSON(steps.get_repo_vars.outputs.result).project_version }}
-          LSIO_VERSION: ${{ fromJSON(steps.get_repo_vars.outputs.result).lsio_version }}
-          BA_VERSION: ${{ fromJSON(steps.get_repo_vars.outputs.result).ba_version }}
         with:
           script: |
             const script = require('./.github/workflows/github-release/github-release.js')
             await script({github, context, core})
+
+      - name: "results"
+        if: ${{ env.RELEASE_NEEDED }}
+        run: |
+          echo ${{env.PROJECT_VERSION}}

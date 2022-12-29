@@ -1,23 +1,22 @@
-//function
-
 module.exports = async ({github, context, core}) => {
         try {
 
+        const {owner, repo} = context.repo;
         const {PROJECT_VERSION, LSIO_VERSION, BA_VERSION} = process.env;
 
         console.log(PROJECT_VERSION, LSIO_VERSION, BA_VERSION);
         const latest_release_response = await github.rest.repos.getLatestRelease({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
+            owner: owner,
+            repo: repo,
         });
 
         const latest_release_tag_name = latest_release_response.data.tag_name;
 
-        console.log(latest_release_tag_name);
+        console.log("Latest release: ", latest_release_tag_name);
 
         const compare_commits_response = await github.rest.repos.compareCommitsWithBasehead({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
+            owner: owner,
+            repo: repo,
             basehead: `${latest_release_tag_name}...HEAD`,
         });
 
@@ -29,17 +28,21 @@ module.exports = async ({github, context, core}) => {
             return;
         }
 
+        core.exportVariable('RELEASE_NEEDED', true);
+
         console.log("Commits since last release: ", total_commits);
 
         const new_ba_version = parseInt(BA_VERSION) + 1;
-        console.log(new_ba_version);
 
         const new_tag_name = `v${PROJECT_VERSION}-ba${new_ba_version}`;
-        console.log(new_tag_name);
+        console.log("New release tag: ", new_tag_name);
+
+
+        core.exportVariable('TAG_NAME', new_tag_name);
 
         const response = await github.rest.repos.generateReleaseNotes({
-            owner: context.repo.owner,
-            repo: context.repo.repo,
+            owner: owner,
+            repo: repo,
             tag_name: new_tag_name,
         });
 
@@ -54,7 +57,8 @@ module.exports = async ({github, context, core}) => {
             `\n\n` +
             generated_release_notes
 
-        console.log(new_release_notes)
+        core.exportVariable('RELEASE_NOTES', new_release_notes);
+
     } catch (error) {
         core.setFailed(error.message);
     }
