@@ -34,19 +34,21 @@ module.exports = async ({github, context, core}) => {
 
         const new_ba_version = parseInt(BA_VERSION) + 1;
 
+        core.exportVariable('NEW_BA_VERSION', new_ba_version);
+
         const new_tag_name = `v${PROJECT_VERSION}-ba${new_ba_version}`;
         console.log("New release tag: ", new_tag_name);
 
 
         core.exportVariable('TAG_NAME', new_tag_name);
 
-        const response = await github.rest.repos.generateReleaseNotes({
+        const generated_notes_response = await github.rest.repos.generateReleaseNotes({
             owner: owner,
             repo: repo,
             tag_name: new_tag_name,
         });
 
-        const generated_release_notes = response.data.body
+        const generated_release_notes = generated_notes_response.data.body
 
         const new_release_notes = `# Release Notes (${new_tag_name})\n\n` +
             `## Version Info\n` +

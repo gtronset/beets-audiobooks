@@ -27,13 +27,26 @@ jobs:
           echo "BA_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).ba_version }}" >> $GITHUB_ENV
 
       - name: "Prep for Release"
+        id: release_prep
         uses: "actions/github-script@v6.3.3"
         with:
           script: |
-            const script = require('./.github/workflows/github-release/github-release.js')
-            await script({github, context, core})
+            const script = require('./.github/workflows/github-release/github-prerelease.js')
+            return await script({github, context, core})
 
-      - name: "results"
+      - name: Set repo variables
         if: ${{ env.RELEASE_NEEDED }}
-        run: |
-          echo ${{env.PROJECT_VERSION}}
+        uses: mikefarah/yq@master
+        env:
+          BA: ${{ env.RELEASE_NEEDED }}
+        with:
+          cmd: >
+            yq '.project_version = "${{ steps.release_prep.outputs.result }}"
+            | .lsio_version = "${{ steps.release_prep.outputs.result }}"
+            | .ba_version = "${{ steps.release_prep.outputs.result }}"' -i ./repo-vars.yaml
+
+
+      - name: Get repo variables 2
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -o "json" '.' ./repo-vars.yaml
