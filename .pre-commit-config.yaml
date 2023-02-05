@@ -25,7 +25,7 @@ repos:
         stages: [manual]
 
   - repo: https://github.com/crate-ci/typos
-    rev: typos-dict-v0.9.16
+    rev: v1.13.10
     hooks:
       - id: typos
         exclude: "(_typos.toml|.gitignore|.dockerignore)"
