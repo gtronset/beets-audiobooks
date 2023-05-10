@@ -3,7 +3,7 @@
 # version information
 project_version: 1.6.0
 lsio_version: 149
-ba_version: 2
+ba_version: 3
 
 # release information
 current_release: v1.6.0-ba2

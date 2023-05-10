@@ -14,7 +14,7 @@ env:
   TEST_TAG: ${{ github.event.repository.full_name }}:test
 
 jobs:
-  build_docker:
+  build_docker_release:
     name: Build and Push Docker image
     if: github.event.repository.fork == false
     runs-on: ubuntu-latest

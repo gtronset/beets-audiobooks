@@ -13,6 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+      - run: rm -rf .git/hooks
 
       - name: Get repo variables
         id: get_repo_vars
@@ -28,25 +29,45 @@ jobs:
 
       - name: "Prep for Release"
         id: release_prep
-        uses: "actions/github-script@v6.3.3"
+        uses: "actions/github-script@v6.4.1"
         with:
           script: |
-            const script = require('./.github/workflows/github-release/github-prerelease.js')
+            const script = require('./.github/workflows/github-release/github-release-check.js')
             return await script({github, context, core})
 
       - name: Set repo variables
         if: ${{ env.RELEASE_NEEDED }}
         uses: mikefarah/yq@master
         env:
-          BA: ${{ env.RELEASE_NEEDED }}
+          NEW_BA_VERSION: ${{ env.NEW_BA_VERSION }}
+          TAG_NAME: ${{ env.TAG_NAME }}
+          OLD_TAG_NAME: ${{ env.OLD_TAG_NAME }}
         with:
           cmd: >
-            yq '.project_version = "${{ steps.release_prep.outputs.result }}"
-            | .lsio_version = "${{ steps.release_prep.outputs.result }}"
-            | .ba_version = "${{ steps.release_prep.outputs.result }}"' -i ./repo-vars.yaml
+            yq '.ba_version = ${{ env.NEW_BA_VERSION }}
+            | .previous_release = "${{ env.OLD_TAG_NAME }}"
+            | .current_release = "${{ env.TAG_NAME }}"' -i ./repo-vars.yaml
 
-
-      - name: Get repo variables 2
-        uses: mikefarah/yq@master
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        env:
+          TAG_NAME: ${{ env.TAG_NAME }}
         with:
-          cmd: yq -o "json" '.' ./repo-vars.yaml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release/beets-audiobooks
+          title: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
+          commit-message: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
+          body: |
+            Update the version of the Overdrive script to the latest version
+          labels: release
+
+      # - name: Enable Pull Request Automerge
+      #   run: gh pr merge --merge --auto "1"
+
+      - name: "Release"
+        id: create-release
+        uses: "actions/github-script@v6.4.1"
+        with:
+          script: |
+            const script = require('./.github/workflows/github-release/github-create-release.js')
+            return await script({github, context, core})
