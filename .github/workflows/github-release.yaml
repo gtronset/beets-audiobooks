@@ -15,17 +15,10 @@ jobs:
       - uses: actions/checkout@v3
       - run: rm -rf .git/hooks
 
-      - name: Get repo variables
-        id: get_repo_vars
-        uses: mikefarah/yq@master
+      - uses: actions/setup-node@v3
         with:
-          cmd: yq -o "json" '.' ./repo-vars.yaml
-
-      - name: "Add repo variables to ENV"
-        run: |
-          echo "PROJECT_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).project_version }}" >> $GITHUB_ENV
-          echo "LSIO_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).lsio_version }}" >> $GITHUB_ENV
-          echo "BA_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).ba_version }}" >> $GITHUB_ENV
+          node-version: 16
+      - run: npm install js-yaml
 
       - name: "Prep for Release"
         id: release_prep
@@ -34,19 +27,6 @@ jobs:
           script: |
             const script = require('./.github/workflows/github-release/github-release-check.js')
             return await script({github, context, core})
-
-      - name: Set repo variables
-        if: ${{ env.RELEASE_NEEDED }}
-        uses: mikefarah/yq@master
-        env:
-          NEW_BA_VERSION: ${{ env.NEW_BA_VERSION }}
-          TAG_NAME: ${{ env.TAG_NAME }}
-          OLD_TAG_NAME: ${{ env.OLD_TAG_NAME }}
-        with:
-          cmd: >
-            yq '.ba_version = ${{ env.NEW_BA_VERSION }}
-            | .previous_release = "${{ env.OLD_TAG_NAME }}"
-            | .current_release = "${{ env.TAG_NAME }}"' -i ./repo-vars.yaml
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
