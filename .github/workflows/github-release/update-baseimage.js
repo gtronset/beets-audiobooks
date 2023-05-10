@@ -31,7 +31,6 @@ module.exports = async ({github, context, core}) => {
 
             /* Update the Version File */
             yamlContents.lsio_version = parseInt(latest_release_version);
-            console.log(yamlContents);
             fs.writeFileSync(versionFile, yaml.dump(yamlContents));
 
             /* Update the Dockerfile */
