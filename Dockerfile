@@ -1,4 +1,4 @@
-FROM lscr.io/linuxserver/beets:1.6.0-ls149
+FROM lscr.io/linuxserver/beets:1.6.0-ls169
 
 # Install dependencies
 COPY requirements.txt .
