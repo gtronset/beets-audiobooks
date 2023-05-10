@@ -48,4 +48,4 @@ docker-compose-dev.yaml
 # Node
 node_modules
 package.json
-package-log.json
+package-lock.json
