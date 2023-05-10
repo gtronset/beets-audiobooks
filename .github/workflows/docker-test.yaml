@@ -4,6 +4,8 @@ name: Docker Image Test
 on:
   workflow_dispatch:
   push:
+  pull_request:
+    types: [opened, reopened]
 
 env:
   TEST_TAG: ${{ github.event.repository.full_name }}:test

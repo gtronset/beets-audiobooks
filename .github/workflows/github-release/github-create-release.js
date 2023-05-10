@@ -27,18 +27,17 @@ module.exports = async ({github, context, core}) => {
         core.setFailed(error.message);
     }
 
-
-    // try {
-    //     await github.rest.repos.createRelease({
-    //         draft: false,
-    //         generate_release_notes: true,
-    //         name: process.env.RELEASE_TAG,
-    //         owner: context.repo.owner,
-    //         prerelease: false,
-    //         repo: context.repo.repo,
-    //         tag_name: process.env.RELEASE_TAG,
-    //     });
-    // } catch (error) {
-    //     core.setFailed(error.message);
-    // }
+    try {
+        await github.rest.repos.createRelease({
+            draft: false,
+            generate_release_notes: true,
+            name: process.env.RELEASE_TAG,
+            owner: context.repo.owner,
+            prerelease: false,
+            repo: context.repo.repo,
+            tag_name: process.env.RELEASE_TAG,
+        });
+    } catch (error) {
+        core.setFailed(error.message);
+    }
 }
