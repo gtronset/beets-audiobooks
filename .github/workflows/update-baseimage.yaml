@@ -28,8 +28,8 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: update/overdrive-autoupdate
-          title: Auto-update BaseImage Script
-          commit-message: Auto-update BaseImage Script
+          title: Auto-update BaseImage
+          commit-message: Auto-update BaseImage
           body: |
             Update the version of the BaseImage to the latest version
           labels: dependencies
