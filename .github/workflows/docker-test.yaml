@@ -25,7 +25,7 @@ jobs:
         # Diff HEAD with the previous commit
         $diff = git diff --name-only HEAD^ HEAD
 
-        # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+        # Check if Dockerfile has changed (added, modified, deleted)
         $SourceDiff = $diff | Where-Object { $_ -match 'Dockerfile' }
         $HasDiff = $SourceDiff.Length -gt 0
 
@@ -34,7 +34,7 @@ jobs:
 
   test_docker_container:
     name: Build and Push Docker image
-    if: ${{ github.event.label.name == 'release' }} || needs.conditional_job_check_files.outputs.dockerfile_changed == 'True'
+    if: github.event.label.name == 'release' || needs.conditional_job_check_files.outputs.dockerfile_changed == 'True'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
