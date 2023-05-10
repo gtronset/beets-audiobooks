@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Docker Image Test
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  TEST_TAG: ${{ github.event.repository.full_name }}:test
+
+jobs:
+  conditional_job_check_files:
+    runs-on: 'ubuntu-latest'
+    # Declare outputs for next jobs
+    outputs:
+      dockerfile_changed: ${{ steps.check_file_changed.outputs.dockerfile_changed }}
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        # Checkout as many commits as needed for the diff
+        fetch-depth: 2
+    - shell: pwsh
+      id: check_file_changed
+      run: |
+        # Diff HEAD with the previous commit
+        $diff = git diff --name-only HEAD^ HEAD
+
+        # Check if a file under docs/ or with the .md extension has changed (added, modified, deleted)
+        $SourceDiff = $diff | Where-Object { $_ -match 'Dockerfile' }
+        $HasDiff = $SourceDiff.Length -gt 0
+
+        # Set the output named "dockerfile_changed"
+        Write-Host "::set-output name=dockerfile_changed::$HasDiff"
+
+  test_docker_container:
+    name: Build and Push Docker image
+    if: ${{ github.event.label.name == 'release' }} || needs.conditional_job_check_files.outputs.dockerfile_changed == 'True'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and export to Docker
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          load: true
+          tags: ${{ env.TEST_TAG }}
+
+      - name: Test Docker image
+        run: |
+          docker run --rm -i ${{ env.TEST_TAG }} beet version
