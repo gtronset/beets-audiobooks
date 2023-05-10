@@ -1,8 +1,9 @@
 module.exports = async ({github, context, core}) => {
+    const {NEW_BA_VERSION, PROJECT_VERSION, LSIO_VERSION, TAG_NAME} = process.env;
+
     try {
 
         const {owner, repo} = context.repo;
-        const {NEW_BA_VERSION, PROJECT_VERSION, LSIO_VERSION, TAG_NAME} = process.env;
 
         const generated_notes_response = await github.rest.repos.generateReleaseNotes({
             owner: owner,
@@ -31,11 +32,11 @@ module.exports = async ({github, context, core}) => {
         await github.rest.repos.createRelease({
             draft: false,
             generate_release_notes: true,
-            name: process.env.RELEASE_TAG,
+            name: TAG_NAME,
             owner: context.repo.owner,
             prerelease: false,
             repo: context.repo.repo,
-            tag_name: process.env.RELEASE_TAG,
+            tag_name: TAG_NAME,
         });
     } catch (error) {
         core.setFailed(error.message);
