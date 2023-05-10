@@ -1,0 +1,73 @@
+# https://docs.github.com/en/actions
+
+name: "Release"
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    name: "Release"
+
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v3
+      - run: rm -rf .git/hooks
+
+      - name: Get repo variables
+        id: get_repo_vars
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -o "json" '.' ./repo-vars.yaml
+
+      - name: "Add repo variables to ENV"
+        run: |
+          echo "PROJECT_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).project_version }}" >> $GITHUB_ENV
+          echo "LSIO_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).lsio_version }}" >> $GITHUB_ENV
+          echo "BA_VERSION=${{ fromJSON(steps.get_repo_vars.outputs.result).ba_version }}" >> $GITHUB_ENV
+
+      - name: "Prep for Release"
+        id: release_prep
+        uses: "actions/github-script@v6.4.1"
+        with:
+          script: |
+            const script = require('./.github/workflows/github-release/github-release-check.js')
+            return await script({github, context, core})
+
+      - name: Set repo variables
+        if: ${{ env.RELEASE_NEEDED }}
+        uses: mikefarah/yq@master
+        env:
+          NEW_BA_VERSION: ${{ env.NEW_BA_VERSION }}
+          TAG_NAME: ${{ env.TAG_NAME }}
+          OLD_TAG_NAME: ${{ env.OLD_TAG_NAME }}
+        with:
+          cmd: >
+            yq '.ba_version = ${{ env.NEW_BA_VERSION }}
+            | .previous_release = "${{ env.OLD_TAG_NAME }}"
+            | .current_release = "${{ env.TAG_NAME }}"' -i ./repo-vars.yaml
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        env:
+          TAG_NAME: ${{ env.TAG_NAME }}
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release/beets-audiobooks
+          title: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
+          commit-message: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
+          body: |
+            Update the version of the Overdrive script to the latest version
+          labels: release
+
+      # - name: Enable Pull Request Automerge
+      #   run: gh pr merge --merge --auto "1"
+
+      - name: "Release"
+        id: create-release
+        uses: "actions/github-script@v6.4.1"
+        with:
+          script: |
+            const script = require('./.github/workflows/github-release/github-create-release.js')
+            return await script({github, context, core})

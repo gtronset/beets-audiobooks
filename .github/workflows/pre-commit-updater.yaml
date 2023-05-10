@@ -3,7 +3,7 @@ on:
   schedule:
     - cron: '0 4 * * 0'
 jobs:
-  auto-update:
+  auto-update-precommit:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
