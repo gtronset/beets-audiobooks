@@ -52,4 +52,4 @@ Temporary Items
 # Node
 node_modules
 package.json
-package-log.json
+package-lock.json
