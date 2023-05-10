@@ -30,7 +30,7 @@ module.exports = async ({github, context, core}) => {
 
     try {
         await github.rest.repos.createRelease({
-            draft: false,
+            draft: true,
             generate_release_notes: true,
             name: TAG_NAME,
             owner: context.repo.owner,
