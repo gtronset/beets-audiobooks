@@ -41,9 +41,6 @@ jobs:
             Update the version of the Overdrive script to the latest version
           labels: release
 
-      # - name: Enable Pull Request Automerge
-      #   run: gh pr merge --merge --auto "1"
-
       - name: "Release"
         id: create-release
         uses: "actions/github-script@v6.4.1"

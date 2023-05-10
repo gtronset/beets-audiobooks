@@ -4,39 +4,17 @@ name: Docker Image Test
 on:
   workflow_dispatch:
   push:
+    paths: ["Dockerfile"]
   pull_request:
+    paths: ["Dockerfile"]
     types: [opened, reopened]
 
 env:
   TEST_TAG: ${{ github.event.repository.full_name }}:test
 
 jobs:
-  conditional_job_check_files:
-    runs-on: 'ubuntu-latest'
-    # Declare outputs for next jobs
-    outputs:
-      dockerfile_changed: ${{ steps.check_file_changed.outputs.dockerfile_changed }}
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        # Checkout as many commits as needed for the diff
-        fetch-depth: 2
-    - shell: pwsh
-      id: check_file_changed
-      run: |
-        # Diff HEAD with the previous commit
-        $diff = git diff --name-only HEAD^ HEAD
-
-        # Check if Dockerfile has changed (added, modified, deleted)
-        $SourceDiff = $diff | Where-Object { $_ -match 'Dockerfile' }
-        $HasDiff = $SourceDiff.Length -gt 0
-
-        # Set the output named "dockerfile_changed"
-        Write-Host "::set-output name=dockerfile_changed::$HasDiff"
-
   test_docker_container:
-    name: Build and Push Docker image
-    if: github.event.label.name == 'release' || needs.conditional_job_check_files.outputs.dockerfile_changed == 'True'
+    name: Build and Test Docker image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository

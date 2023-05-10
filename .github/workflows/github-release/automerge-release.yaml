@@ -10,7 +10,7 @@ env:
 jobs:
 
   test_docker_container:
-    name: Build Docker image
+    name: Build and Test Docker image
     if: github.event.label.name == 'release'
     runs-on: ubuntu-latest
     steps:
