@@ -44,3 +44,8 @@ docker-compose-dev.yaml
 # Ignore Act Secrets
 .actrc
 .act-secrets
+
+# Node
+node_modules
+package.json
+package-log.json

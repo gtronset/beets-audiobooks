@@ -48,3 +48,8 @@ Temporary Items
 .actrc
 .act-secrets
 .act-payload.json
+
+# Node
+node_modules
+package.json
+package-log.json
