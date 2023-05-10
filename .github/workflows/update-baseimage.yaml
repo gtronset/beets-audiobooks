@@ -23,11 +23,6 @@ jobs:
             const script = require('./.github/workflows/github-release/update-baseimage.js')
             return await script({github, context, core})
 
-      - name: Modify the specific files using scripts
-        shell: bash
-        run: |
-          bash update-baseimage.sh
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
