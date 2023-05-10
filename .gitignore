@@ -40,3 +40,7 @@ Temporary Items
 .vscode
 docker-compose-dev.yaml
 .config
+
+# Ignore Act Secrets
+.actrc
+.act-secrets

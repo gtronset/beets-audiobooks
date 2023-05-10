@@ -43,3 +43,8 @@ Temporary Items
 .gitignore
 .github
 .gitattributes
+
+# Ignore Act-related Items
+.actrc
+.act-secrets
+.act-payload.json
