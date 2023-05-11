@@ -4,6 +4,9 @@ on:
   pull_request_target:
     branches:
       - 'main'
+    types:
+      - labeled
+      - reopened
 
 env:
   TEST_TAG: ${{ github.event.repository.full_name }}:test
