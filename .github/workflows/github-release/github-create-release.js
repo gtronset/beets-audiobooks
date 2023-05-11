@@ -2,13 +2,13 @@ const yaml = require('js-yaml');
 const fs   = require('fs');
 
 module.exports = async ({github, context, core}) => {
+    const yamlContents = yaml.load(fs.readFileSync(versionFile, 'utf8'));
+    const {project_version, ba_version, lsio_version, current_release} = yamlContents;
+
     try {
 
         const {owner, repo} = context.repo;
         const versionFile = "repo-vars.yaml";
-
-        const yamlContents = yaml.load(fs.readFileSync(versionFile, 'utf8'));
-        const {project_version, ba_version, lsio_version, current_release} = yamlContents;
 
         const generated_notes_response = await github.rest.repos.generateReleaseNotes({
             owner: owner,
