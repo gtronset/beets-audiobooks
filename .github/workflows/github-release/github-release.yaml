@@ -1,11 +1,16 @@
-name: BaseImage Updater
+# https://docs.github.com/en/actions
+
+name: "Release Prep"
+
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 4 * * 0'
+
 jobs:
-  auto-update-baseimage:
-    runs-on: ubuntu-latest
+  release:
+    name: "Release"
+
+    runs-on: "ubuntu-latest"
+
     steps:
       - uses: actions/checkout@v3
       - run: rm -rf .git/hooks
@@ -20,16 +25,18 @@ jobs:
         uses: "actions/github-script@v6.4.1"
         with:
           script: |
-            const script = require('./.github/workflows/github-release/update-baseimage.js')
+            const script = require('./.github/workflows/github-release/github-release-check.js')
             return await script({github, context, core})
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
+        env:
+          TAG_NAME: ${{ env.TAG_NAME }}
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: update/overdrive-autoupdate
-          title: Auto-update BaseImage
-          commit-message: Auto-update BaseImage
+          branch: release/beets-audiobooks
+          title: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
+          commit-message: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
           body: |
-            Update the version of the BaseImage to the latest version
-          labels: dependencies
+            Update the version of the Overdrive script to the latest version
+          labels: release

@@ -1,0 +1,38 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Docker Image Test
+on:
+  workflow_dispatch:
+  push:
+    paths: ["Dockerfile", "requirements.txt"]
+  pull_request:
+    paths: ["Dockerfile", "requirements.txt"]
+    types: [opened, reopened]
+
+env:
+  TEST_TAG: ${{ github.event.repository.full_name }}:test
+
+jobs:
+  test_docker_container:
+    name: Build and Test Docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          load: true
+          tags: ${{ env.TEST_TAG }}
+
+      - name: Test Docker image
+        run: |
+          docker run --rm -i ${{ env.TEST_TAG }} beet version

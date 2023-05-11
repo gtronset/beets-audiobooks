@@ -5,5 +5,8 @@
     },
     "release": {
         "tag_name": "v9.99.999-ba9"
+    },
+    "label": {
+        "name": "release"
     }
 }
