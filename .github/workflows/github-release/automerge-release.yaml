@@ -34,7 +34,7 @@ jobs:
         run: |
           docker run --rm -i ${{ env.TEST_TAG }} beet version
 
-  automerge:
+  automerge_release:
     if: github.event.label.name == 'release'
     needs: test_docker_container
     runs-on: ubuntu-latest
@@ -48,3 +48,19 @@ jobs:
 
       - name: Approve
         uses: hmarr/auto-approve-action@v3.2.1
+
+      - uses: actions/checkout@v3
+      - run: rm -rf .git/hooks
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: npm install js-yaml
+
+      - name: "Release"
+        id: create-release
+        uses: "actions/github-script@v6.4.1"
+        with:
+          script: |
+            const script = require('./.github/workflows/github-release/github-create-release.js')
+            return await script({github, context, core})
