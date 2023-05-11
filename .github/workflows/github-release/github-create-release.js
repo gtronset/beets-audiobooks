@@ -17,14 +17,14 @@ module.exports = async ({github, context, core}) => {
             `\n\n`;
 
         await github.rest.repos.createRelease({
-            draft: true,
+            draft: false,
             generate_release_notes: true,
             body: releaseBody,
-            name: `${current_release}-TEST`,
+            name: current_release,
             owner: context.repo.owner,
             prerelease: false,
             repo: context.repo.repo,
-            tag_name: `${current_release}-TEST`,
+            tag_name: current_release,
         });
     } catch (error) {
         core.setFailed(error.message);
