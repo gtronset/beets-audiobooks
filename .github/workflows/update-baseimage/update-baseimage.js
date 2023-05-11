@@ -30,7 +30,7 @@ module.exports = async ({github, context, core}) => {
             console.log("BaseImage version update. Updating...");
 
             /* Update the Version File */
-            yamlContents.lsio_version = latest_release_version
+            yamlContents.lsio_version = parseInt(latest_release_version);
             fs.writeFileSync(versionFile, yaml.dump(yamlContents));
 
             /* Update the Dockerfile */

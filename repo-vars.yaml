@@ -1,10 +1,5 @@
----
-
-# version information
 project_version: 1.6.0
-lsio_version: 149
+lsio_version: 169
 ba_version: 3
-
-# release information
 current_release: v1.6.0-ba2
 previous_release: v1.6.0-ba1
