@@ -1,3 +1,6 @@
+const yaml = require('js-yaml');
+const fs   = require('fs');
+
 module.exports = async ({github, context, core}) => {
     try {
 
