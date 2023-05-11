@@ -4,9 +4,9 @@ name: Docker Image Test
 on:
   workflow_dispatch:
   push:
-    paths: ["Dockerfile"]
+    paths: ["Dockerfile", "requirements.txt"]
   pull_request:
-    paths: ["Dockerfile"]
+    paths: ["Dockerfile", "requirements.txt"]
     types: [opened, reopened]
 
 env:
