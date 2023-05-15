@@ -33,7 +33,7 @@ jobs:
         env:
           TAG_NAME: ${{ env.TAG_NAME }}
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           branch: release/beets-audiobooks
           title: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
           commit-message: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
