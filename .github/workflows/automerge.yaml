@@ -48,11 +48,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: tibdex/github-app-token@v1
-        id: get_bot_token
-        with:
-          app_id: ${{ secrets.BOT_APP_ID }}
-          private_key: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: Enable Automerge
         run: gh pr merge --auto --squash "$PR_URL"
@@ -63,4 +58,4 @@ jobs:
       - name: Approve
         uses: hmarr/auto-approve-action@v3.2.1
         with:
-          github-token: ${{ steps.get_bot_token.outputs.token }}
+          github-token: ${{ secrets.PAT }}
