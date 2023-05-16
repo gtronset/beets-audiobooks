@@ -15,7 +15,9 @@ jobs:
 
   test_docker_container:
     name: Build and Test Docker image
-    if: github.event.label.name == 'release'
+    if: |
+      startsWith(github.event.pull_request.title, 'New Release - beets-audiobooks -> v') &&
+      github.event.label.name == 'release'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -39,7 +41,9 @@ jobs:
           docker run --rm -i ${{ env.TEST_TAG }} beet version
 
   automerge_release_pr:
-    if: github.event.label.name == 'release'
+    if: |
+      startsWith(github.event.pull_request.title, 'New Release - beets-audiobooks -> v') &&
+      github.event.label.name == 'release'
     needs: test_docker_container
     runs-on: ubuntu-latest
 

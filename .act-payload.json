@@ -8,5 +8,9 @@
     },
     "label": {
         "name": "release"
+    },
+    "pull_request": {
+        "title": "New Release - beets-audiobooks -> v9.99.999-ba9",
+        "merged": true
     }
 }
