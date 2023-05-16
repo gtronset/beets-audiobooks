@@ -7,7 +7,7 @@ on:
 
 jobs:
   release:
-    name: "Release"
+    name: Trigger Release"
 
     runs-on: "ubuntu-latest"
 
@@ -20,7 +20,7 @@ jobs:
           node-version: 16
       - run: npm install js-yaml
 
-      - name: "Prep for Release"
+      - name: "Trigger Release"
         id: release_prep
         uses: "actions/github-script@v6.4.1"
         with:
