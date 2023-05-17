@@ -19,10 +19,16 @@ jobs:
       - name: Run pre-commit autoupdate
         run: pre-commit autoupdate
 
+      - uses: tibdex/github-app-token@v1
+        id: get_bot_token
+        with:
+          app_id: ${{ secrets.BOT_APP_ID }}
+          private_key: ${{ secrets.BOT_PRIVATE_KEY }}
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ steps.get_bot_token.outputs.token }}
           branch: update/pre-commit-autoupdate
           title: Auto-update pre-commit hooks
           commit-message: Auto-update pre-commit hooks
