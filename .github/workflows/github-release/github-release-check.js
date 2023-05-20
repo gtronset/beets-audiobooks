@@ -58,6 +58,7 @@ module.exports = async ({github, context, core}) => {
         yamlContents.current_release = new_tag_name
         fs.writeFileSync(versionFile, yaml.dump(yamlContents));
 
+        console.log("New version file settings:");
         console.log(yamlContents);
 
     } catch (error) {

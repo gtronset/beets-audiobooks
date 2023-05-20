@@ -19,6 +19,12 @@ module.exports = async ({github, context, core}) => {
         });
 
         const latest_release_tag_name = latest_release_response.data.tag_name;
+        const latest_release_url = latest_release_response.data.html_url;
+        const latest_release_body = latest_release_response.data.body;
+
+        core.exportVariable('EXT_RELEASE_TAG', latest_release_tag_name);
+        core.exportVariable('EXT_RELEASE_URL', latest_release_url);
+        core.exportVariable('EXT_RELEASE_BODY', latest_release_body);
 
         const imageTagRegexPrefix = `${project_version.replaceAll(".", "\\.")}-ls`;
         const version_regex = new RegExp(`${imageTagRegexPrefix}([0-9]+)`);

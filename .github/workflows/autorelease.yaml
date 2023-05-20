@@ -32,7 +32,7 @@ jobs:
           node-version: 16
       - run: npm install js-yaml
 
-      - name: "Release"
+      - name: Create Release
         id: create-release
         uses: "actions/github-script@v6.4.1"
         with:
