@@ -27,16 +27,6 @@ module.exports = async ({github, context, core}) => {
         const version_regex = new RegExp(`([0-9]+\.[0-9]+\.[0-9]+)-ls([0-9]+)`);
         const latest_release_versions = latest_release_tag_name.match(version_regex);
 
-        /*
-        const version_regex = new RegExp(`([0-9]+\.[0-9]+)-[0-9a-f]{8}-ls([0-9]+)`);
-        const latest_release_versions = latest_release_tag_name.match(version_regex);
-
-        console.log(`Existing/local version: ${alpine_version}-ls${lsio_version} | `
-          + `Remote version: ${latest_release_versions[1]}-ls${latest_release_versions[2]}`);
-
-        if(alpine_version !== latest_release_versions[1] || lsio_version !== latest_release_versions[2]){
-            */
-
         console.log(`Existing/local version: ${project_version}-ls${lsio_version} | Remote version: ${latest_release_versions[1]}-ls${latest_release_versions[2]}`);
 
         if(project_version !== latest_release_versions[1] || lsio_version !== latest_release_versions[2]){
