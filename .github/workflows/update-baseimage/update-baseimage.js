@@ -24,13 +24,22 @@ module.exports = async ({github, context, core}) => {
         const latest_release_url = latest_release_response.data.html_url;
         const latest_release_body = latest_release_response.data.body;
 
-        const imageTagRegexPrefix = `${project_version.replaceAll(".", "\\.")}-ls`;
-        const version_regex = new RegExp(`${imageTagRegexPrefix}([0-9]+)`);
-        const latest_release_version = parseInt(latest_release_tag_name.match(version_regex)[1]);
+        const version_regex = new RegExp(`([0-9]+\.[0-9]+\.[0-9]+)-ls([0-9]+)`);
+        const latest_release_versions = latest_release_tag_name.match(version_regex);
 
-        console.log(`Existing/local version: ${project_version}-ls${lsio_version} | Remote version: ${latest_release_tag_name}`);
+        /*
+        const version_regex = new RegExp(`([0-9]+\.[0-9]+)-[0-9a-f]{8}-ls([0-9]+)`);
+        const latest_release_versions = latest_release_tag_name.match(version_regex);
 
-        if(parseInt(lsio_version) !== latest_release_version){
+        console.log(`Existing/local version: ${alpine_version}-ls${lsio_version} | `
+          + `Remote version: ${latest_release_versions[1]}-ls${latest_release_versions[2]}`);
+
+        if(alpine_version !== latest_release_versions[1] || lsio_version !== latest_release_versions[2]){
+            */
+
+        console.log(`Existing/local version: ${project_version}-ls${lsio_version} | Remote version: ${latest_release_versions[1]}-ls${latest_release_versions[2]}`);
+
+        if(project_version !== latest_release_versions[1] || lsio_version !== latest_release_versions[2]){
             baseimage_update_required = true;
 
             console.log("BaseImage version update. Updating...");
@@ -40,8 +49,11 @@ module.exports = async ({github, context, core}) => {
             core.exportVariable('EXT_RELEASE_BODY', latest_release_body);
 
             /* Update the Version File */
-            yamlContents.lsio_version = latest_release_version;
+            yamlContents.project_version = latest_release_versions[1];
+            yamlContents.lsio_version = parseInt(latest_release_versions[2]);
             fs.writeFileSync(versionFile, yaml.dump(yamlContents));
+
+            console.log(yamlContents)
 
             /* Update the Dockerfile */
             fs.readFile(dockerfile, 'utf8', function (err, data) {
@@ -49,8 +61,7 @@ module.exports = async ({github, context, core}) => {
                     return console.log(err);
                 }
 
-                const dockerRegex = new RegExp(`${imageTagRegexPrefix}${lsio_version}`, "g")
-                const result = data.replace(dockerRegex, latest_release_tag_name);
+                const result = data.replace(version_regex, latest_release_tag_name);
 
                 fs.writeFile(dockerfile, result, 'utf8', function (err) {
                     if (err) return console.log(err);
