@@ -5,14 +5,10 @@ module.exports = async ({github, context, core}) => {
     try {
 
         const {owner, repo} = context.repo;
-        const versionFile = "repo-vars.yaml";
+        const versionFile = "version.yaml";
 
         const yamlContents = yaml.load(fs.readFileSync(versionFile, 'utf8'));
         const {project_version, ba_version, lsio_version} = yamlContents;
-
-        /* Make available the following variables in subsequent step(s) */
-        core.exportVariable('PROJECT_VERSION', project_version);
-        core.exportVariable('LSIO_VERSION', lsio_version);
 
         const latest_release_response = await github.rest.repos.getLatestRelease({
             owner: owner,
@@ -36,6 +32,10 @@ module.exports = async ({github, context, core}) => {
             console.log(`No new commits since last release (${latest_release_tag_name}).`);
             return;
         }
+
+        /* Make available the following variables in subsequent step(s) */
+        core.exportVariable('PROJECT_VERSION', project_version);
+        core.exportVariable('LSIO_VERSION', lsio_version);
 
         core.exportVariable('RELEASE_NEEDED', true);
         core.exportVariable('OLD_TAG_NAME', latest_release_tag_name);

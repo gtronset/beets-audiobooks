@@ -2,7 +2,7 @@ const yaml = require('js-yaml');
 const fs   = require('fs');
 
 module.exports = async ({github, context, core}) => {
-    const versionFile = "repo-vars.yaml";
+    const versionFile = "version.yaml";
 
     const yamlContents = yaml.load(fs.readFileSync(versionFile, 'utf8'));
     const {project_version, ba_version, lsio_version, current_release} = yamlContents;
