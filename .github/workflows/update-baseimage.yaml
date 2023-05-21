@@ -15,21 +15,32 @@ jobs:
           node-version: 16
       - run: npm install js-yaml
 
-      - name: "Prep for Release"
-        id: release_prep
-        uses: "actions/github-script@v6.4.1"
+      - name: Check for BaseImage Update
+        id: update_prep
+        uses: actions/github-script@v6.4.1
         with:
           script: |
             const script = require('./.github/workflows/update-baseimage/update-baseimage.js')
             return await script({github, context, core})
 
+      - uses: tibdex/github-app-token@v1
+        id: get_bot_token
+        if: ${{ env.UPDATE_REQUIRED == 'true' }}
+        with:
+          app_id: ${{ secrets.BOT_APP_ID }}
+          private_key: ${{ secrets.BOT_PRIVATE_KEY }}
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
+        if: ${{ env.UPDATE_REQUIRED == 'true' }}
         with:
-          token: ${{ secrets.PAT }}
+          token: ${{ steps.get_bot_token.outputs.token }}
           branch: update/overdrive-autoupdate
-          title: Auto-update BaseImage
-          commit-message: Auto-update BaseImage
+          title: Auto-update BaseImage to ${{ env.EXT_RELEASE_TAG }}
+          commit-message: Auto-update BaseImage to ${{ env.EXT_RELEASE_TAG }}
           body: |
-            Update the version of the BaseImage to the latest version
+            Update the version of the BaseImage to the latest version (${{ env.EXT_RELEASE_TAG }}).\n
+            ---\n
+            BaseImage Details: ${{ env.EXT_RELEASE_URL }}\n
+            ${{ env.EXT_RELEASE_BODY }}
           labels: dependencies

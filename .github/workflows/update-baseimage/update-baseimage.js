@@ -2,11 +2,13 @@ const yaml = require('js-yaml');
 const fs   = require('fs');
 
 module.exports = async ({github, context, core}) => {
+    let baseimage_update_required = false;
+
     try {
 
         const baseimageOwner = "linuxserver";
         const baseimageRepo = "docker-beets";
-        const versionFile = "repo-vars.yaml";
+        const versionFile = "version.yaml";
         const dockerfile = "Dockerfile";
 
         const yamlContents = yaml.load(fs.readFileSync(versionFile, 'utf8'));
@@ -19,18 +21,26 @@ module.exports = async ({github, context, core}) => {
         });
 
         const latest_release_tag_name = latest_release_response.data.tag_name;
+        const latest_release_url = latest_release_response.data.html_url;
+        const latest_release_body = latest_release_response.data.body;
 
         const imageTagRegexPrefix = `${project_version.replaceAll(".", "\\.")}-ls`;
         const version_regex = new RegExp(`${imageTagRegexPrefix}([0-9]+)`);
-        const latest_release_version = latest_release_tag_name.match(version_regex)[1];
+        const latest_release_version = parseInt(latest_release_tag_name.match(version_regex)[1]);
 
         console.log(`Existing/local version: ${project_version}-ls${lsio_version} | Remote version: ${latest_release_tag_name}`);
 
-        if(lsio_version !== latest_release_version){
+        if(parseInt(lsio_version) !== latest_release_version){
+            baseimage_update_required = true;
+
             console.log("BaseImage version update. Updating...");
 
+            core.exportVariable('EXT_RELEASE_TAG', latest_release_tag_name);
+            core.exportVariable('EXT_RELEASE_URL', latest_release_url);
+            core.exportVariable('EXT_RELEASE_BODY', latest_release_body);
+
             /* Update the Version File */
-            yamlContents.lsio_version = parseInt(latest_release_version);
+            yamlContents.lsio_version = latest_release_version;
             fs.writeFileSync(versionFile, yaml.dump(yamlContents));
 
             /* Update the Dockerfile */
@@ -51,6 +61,9 @@ module.exports = async ({github, context, core}) => {
         } else {
             console.log("BaseImage is already up-to-date.");
         }
+
+
+        core.exportVariable('UPDATE_REQUIRED', baseimage_update_required);
 
     } catch (error) {
         core.setFailed(error.message);
