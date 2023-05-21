@@ -24,13 +24,14 @@ module.exports = async ({github, context, core}) => {
         const latest_release_url = latest_release_response.data.html_url;
         const latest_release_body = latest_release_response.data.body;
 
-        const imageTagRegexPrefix = `${project_version.replaceAll(".", "\\.")}-ls`;
-        const version_regex = new RegExp(`${imageTagRegexPrefix}([0-9]+)`);
-        const latest_release_version = parseInt(latest_release_tag_name.match(version_regex)[1]);
+        const version_regex = new RegExp(`([0-9]+\.[0-9]+\.[0-9]+)-ls([0-9]+)`);
+        const latest_release_versions = latest_release_tag_name.match(version_regex);
+        const remote_project_version = latest_release_versions[1];
+        const remote_lsio_version = parseInt(latest_release_versions[2]);
 
-        console.log(`Existing/local version: ${project_version}-ls${lsio_version} | Remote version: ${latest_release_tag_name}`);
+        console.log(`Existing/local version: ${project_version}-ls${lsio_version} | Remote version: ${remote_project_version}-ls${remote_lsio_version}`);
 
-        if(parseInt(lsio_version) !== latest_release_version){
+        if(project_version !== remote_project_version || lsio_version !== remote_lsio_version){
             baseimage_update_required = true;
 
             console.log("BaseImage version update. Updating...");
@@ -40,8 +41,11 @@ module.exports = async ({github, context, core}) => {
             core.exportVariable('EXT_RELEASE_BODY', latest_release_body);
 
             /* Update the Version File */
-            yamlContents.lsio_version = latest_release_version;
+            yamlContents.project_version = remote_project_version;
+            yamlContents.lsio_version = remote_lsio_version;
             fs.writeFileSync(versionFile, yaml.dump(yamlContents));
+
+            console.log(yamlContents)
 
             /* Update the Dockerfile */
             fs.readFile(dockerfile, 'utf8', function (err, data) {
@@ -49,8 +53,7 @@ module.exports = async ({github, context, core}) => {
                     return console.log(err);
                 }
 
-                const dockerRegex = new RegExp(`${imageTagRegexPrefix}${lsio_version}`, "g")
-                const result = data.replace(dockerRegex, latest_release_tag_name);
+                const result = data.replace(version_regex, latest_release_tag_name);
 
                 fs.writeFile(dockerfile, result, 'utf8', function (err) {
                     if (err) return console.log(err);

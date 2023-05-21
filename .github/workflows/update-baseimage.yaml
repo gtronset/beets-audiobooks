@@ -39,8 +39,11 @@ jobs:
           title: Auto-update BaseImage to ${{ env.EXT_RELEASE_TAG }}
           commit-message: Auto-update BaseImage to ${{ env.EXT_RELEASE_TAG }}
           body: |
-            Update the version of the BaseImage to the latest version (${{ env.EXT_RELEASE_TAG }}).\n
-            ---\n
-            BaseImage Details: ${{ env.EXT_RELEASE_URL }}\n
+            Update the version of the BaseImage to the latest version (${{ env.EXT_RELEASE_TAG }}).
+
+            BaseImage Details: ${{ env.EXT_RELEASE_URL }}
+
+            ---
+
             ${{ env.EXT_RELEASE_BODY }}
           labels: dependencies
