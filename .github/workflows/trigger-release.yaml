@@ -28,7 +28,7 @@ jobs:
             const script = require('./.github/workflows/github-release/github-release-check.js')
             return await script({github, context, core})
 
-      - uses: tibdex/github-app-token@v1
+      - uses: tibdex/github-app-token@v2
         id: get_bot_token
         if: ${{ env.RELEASE_NEEDED == 'true' }}
         with:
