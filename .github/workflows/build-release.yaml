@@ -35,15 +35,15 @@ jobs:
           images: |
             ghcr.io/${{ github.event.repository.full_name }}
           tags: |
-              type=match,value=${{ github.event.release.tag_name }},pattern=v(.*),group=1
-              type=match,value=${{ github.event.release.tag_name }},pattern=v(\d+.\d+.\d+),group=1
-              type=match,value=${{ github.event.release.tag_name }},pattern=v(\d+.\d+),group=1
-              type=match,value=${{ github.event.release.tag_name }},pattern=v(\d+),group=1
+            type=match,value=${{ github.event.release.tag_name }},pattern=v(.*),group=1
+            type=match,value=${{ github.event.release.tag_name }},pattern=v(\d+.\d+.\d+),group=1
+            type=match,value=${{ github.event.release.tag_name }},pattern=v(\d+.\d+),group=1
+            type=match,value=${{ github.event.release.tag_name }},pattern=v(\d+),group=1
 
       - name: Tags
         run: |
-              echo "Tags:"
-              echo "${{ steps.meta.outputs.tags }}"
+          echo "Tags:"
+          echo "${{ steps.meta.outputs.tags }}"
 
       #- name: Login to DockerHub
       #  uses: docker/login-action@v3
@@ -73,7 +73,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/arm/v7,linux/arm64,linux/amd64
+          platforms: linux/arm64,linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
