@@ -60,6 +60,6 @@ jobs:
           GITHUB_TOKEN: ${{ steps.get_bot_token.outputs.token }}
 
       - name: Approve
-        uses: hmarr/auto-approve-action@v3.2.1
+        uses: hmarr/auto-approve-action@v4.0.0
         with:
           github-token: ${{ secrets.PAT }}
