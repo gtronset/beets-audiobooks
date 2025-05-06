@@ -44,5 +44,5 @@ jobs:
           title: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
           commit-message: New Release - beets-audiobooks -> ${{ env.TAG_NAME }}
           body: |
-            Update the version of the Overdrive script to the latest version
+            Updates the version of beets-audiobooks Docker image to a newer version.
           labels: release
