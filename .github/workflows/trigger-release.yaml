@@ -22,7 +22,7 @@ jobs:
 
       - name: "Trigger Release Check"
         id: release_prep
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const script = require('./.github/workflows/github-release/github-release-check.js')
